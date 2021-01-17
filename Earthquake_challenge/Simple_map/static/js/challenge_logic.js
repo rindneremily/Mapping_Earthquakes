@@ -119,14 +119,11 @@ let legend = L.control({
 legend.onAdd = function() {
   let div = L.DomUtil.create("div", "info legend");
 
-  const magnitudes = [0, 1, 2, 3, 4, 5];
+  const magnitudes = [0-4, 4-5, 5-10];
   const colors = [
     "#98ee00",
     "#d4ee00",
-    "#eecc00",
-    "#ee9c00",
-    "#ea822c",
-    "#ea2c2c"
+    "#eecc00"
   ];
 
 // Looping through our intervals to generate a label with a colored square for each interval.
@@ -146,68 +143,13 @@ legend.onAdd = function() {
   // 3. Use d3.json to make a call to get our Tectonic Plate geoJSON data.
   d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function(plateData) {
     L.geoJson(plateData, {
+      style: styleInfo,
       color: "#800000",
       weight: 4
     }).addTo(tectonicPlates)
     tectonicPlates.addTo(map)
   });
+  
+  
 
-  // 4. Use the same style as the earthquake data.
-
-
-// 5. Change the color function to use three colors for the major earthquakes based on the magnitude of the earthquake.
-
-
-// 6. Use the function that determines the radius of the earthquake marker based on its magnitude.
-
-
-// 7. Creating a GeoJSON layer with the retrieved data that adds a circle to the map 
-// sets the style of the circle, and displays the magnitude and location of the earthquake
-//  after the marker has been created and styled.
-L.geoJson(, {
-    
-});
-// 8. Add the major earthquakes layer to the map.
-
-// 9. Close the braces and parentheses for the major earthquake data.
-});
-
-// Here we create a legend control object.
-let legend = L.control({
-  position: "bottomright"
-
-});
-
-// Then add all the details for the legend
-legend.onAdd = function() {
-  let div = L.DomUtil.create("div", "info legend");
-
-  const magnitudes = [0, 1, 2, 3, 4, 5];
-  const colors = [
-    "#98ee00",
-    "#d4ee00",
-    "#eecc00",
-    "#ee9c00",
-    "#ea822c",
-    "#ea2c2c"
-  ];
-
-// Looping through our intervals to generate a label with a colored square for each interval.
-  for (var i = 0; i < magnitudes.length; i++) {
-    console.log(colors[i]);
-    div.innerHTML +=
-      "<i style='background: " + colors[i] + "'></i> " +
-      magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
-    }
-    return div;
-  };
-
-  // Finally, we our legend to the map.
-  legend.addTo(map);
-
-
-  // Use d3.json to make a call to get our Tectonic Plate geoJSON data.
-  d3.json().then(() {
-    
-  });
-});
+})
