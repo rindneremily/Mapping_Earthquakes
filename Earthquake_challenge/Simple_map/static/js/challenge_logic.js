@@ -70,14 +70,8 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     if (magnitude > 4) {
       return "#ea822c";
     }
-    if (magnitude > 3) {
-      return "#ee9c00";
-    }
-    if (magnitude > 2) {
-      return "#eecc00";
-    }
-    if (magnitude > 1) {
-      return "#d4ee00";
+    if (magnitude < 4) {
+      return "#DEB887";
     }
     return "#98ee00";
   }
@@ -121,9 +115,9 @@ legend.onAdd = function() {
 
   const magnitudes = [0-4, 4-5, 5-10];
   const colors = [
-    "#98ee00",
-    "#d4ee00",
-    "#eecc00"
+    "#ea2c2c",
+    "#ea822c",
+    "#DEB887"
   ];
 
 // Looping through our intervals to generate a label with a colored square for each interval.
@@ -141,6 +135,51 @@ legend.onAdd = function() {
 
 
   // 3. Use d3.json to make a call to get our Tectonic Plate geoJSON data.
+  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson").then(function(plateData) {
+    function styleInfo(feature) {
+      return {
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: "#ffae42",
+        color: "#000000",
+        radius: getRadius(),
+        stroke: true,
+        weight: 0.5
+      };
+    }
+    // This function determines the color of the circle based on the magnitude of the earthquake.
+    function getColor(magnitude) {
+      if (magnitude > 5) {
+        return "#ea2c2c";
+      }
+      if (magnitude > 4) {
+        return "#ea822c";
+      }
+      if (magnitude < 4 ) {
+        return "#DEB887";
+      }
+      return "#98ee00";
+    }
+    function getRadius(magnitude) {
+      if (magnitude === 0) {
+        return 1;
+      }
+      return magnitude * 4;
+    }
+    
+L.geoJson(plateData, {
+    pointToLayer: function(feature, latlng) {
+      console.log(data);
+      return L.circleMarker(latlng);
+  },
+      style: styleInfo,
+      onEachFeature: function(feature, layer) {
+      layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);    
+      }
+      }).addTo(bigEarthquakes);
+      bigEarthquakes.addTo(map);
+
+    });
   d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function(plateData) {
     L.geoJson(plateData, {
       style: styleInfo,
@@ -149,7 +188,6 @@ legend.onAdd = function() {
     }).addTo(tectonicPlates)
     tectonicPlates.addTo(map)
   });
-  
   
 
 })
